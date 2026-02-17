@@ -12,7 +12,7 @@ This project demonstrates how modern GenAI systems are built in practice by comb
 ---
 
 ##  Live Demo
-🔗 *(Add your Streamlit Cloud URL here after deployment)*
+🔗 https://rag-research-assistant-pre-added.streamlit.app/
 
 ---
 
