@@ -1,4 +1,4 @@
-# 📄 Research Paper RAG Assistant
+#  Research Paper RAG Assistant
 
 An end-to-end **Retrieval-Augmented Generation (RAG)** system built on real **arXiv research papers**, designed to answer user questions with **source attribution** and **confidence scoring**.
 
@@ -12,7 +12,7 @@ This project demonstrates how modern GenAI systems are built in practice by comb
 ---
 
 ##  Live Demo
-🔗 https://rag-research-assistant-pre-added.streamlit.app/
+ https://rag-research-assistant-pre-added.streamlit.app/
 
 ---
 
@@ -73,7 +73,7 @@ flowchart TD
     D --> E[Context Truncation]
     E --> F[Confidence Computation]
     F --> G[Display Answer + Sources]
-💡 This flow ensures the model never answers without first retrieving evidence.
+ This flow ensures the model never answers without first retrieving evidence.
 
  Dataset
 
@@ -234,7 +234,7 @@ Explainable AI
 
 Production-ready deployment
 
-📜 License
+ License
 
 This project is for educational and portfolio purposes.
 
