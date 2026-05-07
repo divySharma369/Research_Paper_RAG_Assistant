@@ -1,8 +1,9 @@
-#  Research Paper RAG Assistant
+# Research Paper RAG Assistant
 
 An end-to-end **Retrieval-Augmented Generation (RAG)** system built on real **arXiv research papers**, designed to answer user questions with **source attribution** and **confidence scoring**.
 
 This project demonstrates how modern GenAI systems are built in practice by combining:
+
 - Transformer-based embeddings
 - Vector databases (FAISS)
 - Retrieval-first reasoning
@@ -11,45 +12,62 @@ This project demonstrates how modern GenAI systems are built in practice by comb
 
 ---
 
-##  Live Demo
- https://rag-research-assistant-pre-added.streamlit.app/
+## Live Demo
+
+https://rag-research-assistant-pre-added.streamlit.app/
 
 ---
 
-##  Problem Statement
+## Problem Statement
 
 Large Language Models (LLMs) often **hallucinate** when answering questions, especially in technical domains like research papers.
 
-This project solves that problem by:
-- Retrieving **relevant research documents first**
-- Generating answers **only from retrieved context**
-- Showing **which paper** was used
-- Reporting a **confidence score** for transparency
+This project addresses that problem by:
+
+- Retrieving relevant research documents first
+- Generating responses only from retrieved context
+- Showing which paper was used
+- Reporting a confidence score for transparency
 
 ---
 
-##  What This System Does
+## What This System Does
 
-1. Accepts a **natural language question**
-2. Finds the most relevant research papers using **semantic search**
-3. Builds a context from retrieved documents
-4. Generates an answer **grounded in real papers**
+1. Accepts a natural language query
+2. Performs semantic search on arXiv research papers
+3. Retrieves the most relevant documents
+4. Builds grounded context from retrieved papers
 5. Displays:
    - Confidence score
-   - Source paper title & category
-   - Context used for answering
+   - Source paper title
+   - arXiv category
+   - Retrieved context
 
 ---
 
-##  System Architecture
+## Why RAG?
+
+Traditional LLMs rely only on parametric memory and may hallucinate factual information.
+
+RAG systems improve reliability by retrieving external knowledge before generating responses, enabling:
+
+- Grounded generation
+- Source attribution
+- Factual consistency
+- Explainable AI systems
+
+---
+
+## System Architecture
 
 ### High-Level Architecture
 
+```text
 User Query
 ↓
-Sentence Transformer (Embeddings)
+Sentence Transformer Embedding
 ↓
-FAISS Vector Index
+FAISS Vector Search
 ↓
 Top-K Relevant Documents
 ↓
@@ -58,12 +76,11 @@ Context Construction
 Confidence Scoring + Source Attribution
 ↓
 Streamlit UI Output
-
-
+```
 
 ---
 
-##  Detailed RAG Pipeline Flow
+## Detailed RAG Pipeline Flow
 
 ```mermaid
 flowchart TD
@@ -73,197 +90,231 @@ flowchart TD
     D --> E[Context Truncation]
     E --> F[Confidence Computation]
     F --> G[Display Answer + Sources]
- This flow ensures the model never answers without first retrieving evidence.
+```
 
- Dataset
+This flow ensures the model never answers without first retrieving evidence.
 
-Source: arXiv (Cornell University)
+---
 
-Type: JSON Lines (.json)
+## Dataset
 
-Fields Used:
+**Source:** arXiv (Cornell University)
 
-title
+**Format:** JSON Lines (`.json`)
 
-abstract
+### Fields Used
 
-categories
+- `title`
+- `abstract`
+- `categories`
 
 Only abstracts are used to:
 
-Reduce noise
+- Reduce noise
+- Fit model context windows
+- Improve retrieval precision
 
-Fit model context windows
+---
 
-Improve retrieval precision
+## Embedding Model
 
- Embedding Model
+### Model Used
 
-Model: all-MiniLM-L6-v2
+`all-MiniLM-L6-v2`
 
-Why this model?
+### Why This Model?
 
-Lightweight
+- Lightweight
+- Strong semantic performance
+- Industry-standard for RAG systems
+- Fast inference speed
 
-Strong semantic performance
+### Computation
 
-Industry-standard for RAG systems
+- GPU (Tesla T4) used during embedding generation
+- CPU used during inference and retrieval
 
-Computation:
+---
 
-GPU (Tesla T4) used during embedding generation
+## Vector Database (FAISS)
 
-CPU used during inference & retrieval
+### Index Type
 
- Vector Database (FAISS)
+`IndexFlatIP`
 
-Index Type: IndexFlatIP
+### Similarity Metric
 
-Similarity Metric: Cosine similarity (via normalized embeddings)
+Cosine similarity (via normalized embeddings)
 
-Why FAISS?
+### Why FAISS?
 
-Extremely fast vector search
+- Extremely fast vector search
+- Widely used in production RAG systems
+- Scales efficiently to millions of embeddings
 
-Widely used in production RAG systems
+---
 
-Scales to millions of documents
-
- Confidence Scoring
+## Confidence Scoring
 
 Confidence is derived from cosine similarity scores returned by FAISS.
 
+```text
 confidence (%) = average_similarity × 100
-
+```
 
 This allows the system to:
 
-Communicate uncertainty honestly
+- Communicate uncertainty honestly
+- Avoid overconfident hallucinations
+- Build user trust
 
-Avoid overconfident hallucinations
+---
 
-Build user trust
+## Source Attribution
 
- Source Attribution
+For every response, the system displays:
 
-For every answer, the system displays:
-
-Research paper title
-
-arXiv category (e.g. hep-ph)
-
-Similarity score
+- Research paper title
+- arXiv category
+- Similarity score
 
 This makes the system transparent and auditable.
 
- User Interface (Streamlit)
+---
+
+## User Interface (Streamlit)
 
 The Streamlit app provides:
 
-Text input for questions
-
-Confidence percentage
-
-Source paper details
-
-Context preview used for answering
+- Natural language query input
+- Confidence percentage
+- Source paper details
+- Retrieved context preview
 
 Designed to be:
 
-Lightweight
+- Lightweight
+- Fast
+- Easy to deploy
 
-Fast
+---
 
-Easy to deploy on Streamlit Cloud
+## Example Questions
 
- Project Structure
+- What is diphoton production in particle physics?
+- What are next-to-leading order contributions?
+- How are photon pairs produced in hadron colliders?
+- What kind of problems are studied in hep-ph research?
+
+Out-of-scope questions correctly return low confidence or uncertainty.
+
+---
+
+## Example Retrieval
+
+### Query
+
+```text
+What are next-to-leading order contributions?
+```
+
+### Retrieved Paper
+
+```text
+Next-to-leading order QCD corrections for diphoton production
+```
+
+### Confidence
+
+```text
+92.4%
+```
+
+---
+
+## Tech Stack
+
+- Python
+- Sentence Transformers
+- FAISS
+- NumPy
+- Streamlit
+- Pickle
+- arXiv Dataset
+
+---
+
+## Project Structure
+
+```text
 Research_Paper_RAG_Assistant/
 │
 ├── app.py                 # Streamlit application
 ├── rag_utils.py           # Core RAG logic
-├── faiss_index.bin        # Vector database
-├── data_bundle.pkl        # Documents + metadata
+├── faiss_index.bin        # FAISS vector index
+├── data_bundle.pkl        # Documents and metadata
 ├── requirements.txt       # Dependencies
-└── README.md              # Project documentation
-
- Example Questions to Try
-
-What is diphoton production in particle physics?
-
-What are next-to-leading order contributions?
-
-How are photon pairs produced in hadron colliders?
-
-What kind of problems are studied in hep-ph research?
-
-Out-of-scope questions correctly return low confidence or "I don't know".
-
- Known Limitations
-
-Uses abstracts only, not full PDFs
-
-Answer generation is conservative by design
-
-No fine-tuned LLM (uses retrieval-first approach)
-
-These are intentional design choices for reliability.
-
- Future Improvements
-
-Full PDF ingestion & chunking
-
-Better answer generation models
-
-Reranking retrieved documents
-
-Multi-document synthesis
-
-Evaluation dashboard (Precision@K)
-
- Skills Demonstrated
-
-Retrieval-Augmented Generation (RAG)
-
-Vector databases (FAISS)
-
-Transformer embeddings
-
-GPU/CPU workload separation
-
-Explainable AI
-
-Production-ready deployment
-
- License
-
-This project is for educational and portfolio purposes.
-
- Acknowledgements
-
-arXiv & Cornell University
-
-Hugging Face
-
-Facebook AI (FAISS)
-
-Streamlit
-
- If you find this project useful, feel free to star the repository!
-
+└── README.md              # Documentation
+```
 
 ---
 
-##  About Images & Diagrams (Important)
+## Known Limitations
 
-Right now:
-- Mermaid diagram renders automatically on GitHub ✔
-- Streamlit doesn’t need images ✔
+- Uses abstracts only, not full PDFs
+- No reranking stage
+- Conservative answer generation
+- No fine-tuned LLM integration yet
 
-Later (optional):
-- Add `/assets/architecture.png`
-- Add `/assets/rag_flow.png`
-- Reference them in README like:
+These are intentional design choices for reliability and lightweight deployment.
 
-```markdown
-![Architecture](assets/architecture.png)
+---
 
+## Future Improvements
+
+- Full PDF ingestion and chunking
+- Multi-document synthesis
+- Better reranking pipelines
+- Advanced answer generation models
+- Evaluation dashboard (Precision@K)
+
+---
+
+## Skills Demonstrated
+
+- Retrieval-Augmented Generation (RAG)
+- Semantic Search
+- Vector Databases (FAISS)
+- Transformer Embeddings
+- Explainable AI
+- Confidence Estimation
+- Streamlit Deployment
+- GPU/CPU Workload Separation
+
+---
+
+## Deployment
+
+- Streamlit Cloud for frontend deployment
+- FAISS for semantic retrieval
+- Sentence Transformers for embeddings
+- CPU-optimized inference pipeline
+
+---
+
+## License
+
+This project is intended for educational and portfolio purposes.
+
+---
+
+## Acknowledgements
+
+- arXiv & Cornell University
+- Hugging Face
+- Facebook AI Research (FAISS)
+- Streamlit
+
+---
+
+If you found this project useful, feel free to star the repository ⭐
